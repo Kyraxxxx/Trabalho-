@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuidar Conecta - Apoio à Saúde Mental</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231E3A8A'/%3E%3Cstop offset='100%25' style='stop-color:%230D9488'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23grad)' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background: #F8FAFC;
+            color: #1E293B;
+            line-height: 1.6;
+        }
+
+        .intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0B0F19 0%, #162032 100%);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(1rem, 5vw, 4rem);
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .intro-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .intro-content {
+            text-align: center;
+            max-width: clamp(300px, 90vw, 600px);
+        }
+
+        .intro-logo {
+            width: clamp(80px, 20vw, 120px);
+            height: clamp(80px, 20vw, 120px);
+            background: linear-gradient(135deg, #1E3A8A 0%, #0D9488 100%);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto clamp(1.5rem, 3vw, 2rem);
+            box-shadow: 0 20px 60px rgba(30, 58, 138, 0.4);
+        }
+
+        .intro-logo svg {
+            width: clamp(40px, 10vw, 60px);
+            height: clamp(40px, 10vw, 60px);
+            fill: white;
+        }
+
+        .intro-content h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            color: white;
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            line-height: 1.2;
+        }
+
+        .intro-content h1 span {
+            color: #0D9488;
+        }
+
+        .intro-content p {
+            color: #94A3B8;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            line-height: 1.7;
+        }
+
+        .intro-btn {
+            padding: clamp(1rem, 2vw, 1.25rem) clamp(2rem, 4vw, 3rem);
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(30, 58, 138, 0.4);
+        }
+
+        .intro-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(30, 58, 138, 0.5);
+        }
+
+        .transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #1E3A8A 0%, #0D9488 100%);
+            z-index: 20000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .transition-overlay.active {
+            display: flex;
+        }
+
+        .transition-heart {
+            width: clamp(60px, 15vw, 100px);
+            height: clamp(60px, 15vw, 100px);
+            opacity: 0;
+        }
+
+        .transition-heart svg {
+            width: 100%;
+            height: 100%;
+            fill: white;
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
+        }
+
+        .transition-heart.animate {
+            animation: heartExpand 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes heartExpand {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(20);
+            }
+        }
+
+        .main-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .main-content.revealed {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            z-index: 1000;
+            padding: 1rem clamp(1rem, 5vw, 4rem);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.animate {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .logo-icon {
+            width: clamp(32px, 4vw, 40px);
+            height: clamp(32px, 4vw, 40px);
+            background: linear-gradient(135deg, #1E3A8A 0%, #0D9488 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg {
+            width: clamp(20px, 2.5vw, 24px);
+            height: clamp(20px, 2.5vw, 24px);
+            fill: white;
+        }
+
+        .logo-text {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .logo-text span {
+            color: #1E3A8A;
+        }
+
+        .nav {
+            display: flex;
+            gap: clamp(1rem, 2vw, 2rem);
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #64748B;
+            font-weight: 500;
+            font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.5rem 0;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #1E3A8A, #0D9488);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover {
+            color: #1E3A8A;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            min-width: clamp(180px, 25vw, 200px);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.5rem 0;
+        }
+
+        .nav-item:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 0.75rem 1.25rem;
+            text-decoration: none;
+            color: #64748B;
+            font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .dropdown a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 2px;
+            background: #0D9488;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dropdown a:hover {
+            background: #F8FAFC;
+            color: #1E3A8A;
+            padding-left: 1.5rem;
+        }
+
+        .dropdown a:hover::before {
+            width: 8px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+            background: none;
+            border: none;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #1E3A8A;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            padding: 5rem clamp(1rem, 5vw, 4rem);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 1.5rem;
+            right: clamp(1rem, 5vw, 4rem);
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #1E293B;
+            cursor: pointer;
+        }
+
+        .mobile-nav-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-nav-link {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            font-weight: 600;
+            color: #1E293B;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-dropdown {
+            margin-left: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .mobile-dropdown a {
+            display: block;
+            padding: 0.5rem 0;
+            color: #64748B;
+            text-decoration: none;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(6rem, 15vw, 8rem) clamp(1rem, 5vw, 4rem) clamp(3rem, 10vw, 4rem);
+            background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-content {
+            max-width: clamp(300px, 90vw, 800px);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            color: #1E3A8A;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: #64748B;
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+            max-width: clamp(280px, 80vw, 600px);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: clamp(0.75rem, 1.5vw, 1rem);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: clamp(0.875rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+            text-decoration: none;
+            max-width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.35);
+        }
+
+        .btn-primary:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-secondary {
+            padding: clamp(0.875rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+            background: white;
+            color: #1E3A8A;
+            border: 2px solid #1E3A8A;
+            border-radius: 16px;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            max-width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background: #EFF6FF;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+        }
+
+        .section {
+            padding: clamp(4rem, 10vw, 6rem) clamp(1rem, 5vw, 4rem);
+            max-width: clamp(300px, 95vw, 1400px);
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
+            text-align: center;
+        }
+
+        .section-subtitle {
+            color: #64748B;
+            text-align: center;
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            max-width: clamp(280px, 90vw, 700px);
+            margin-left: auto;
+            margin-right: auto;
+            font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: clamp(1rem, 2vw, 2rem);
+        }
+
+        .problem-card {
+            background: white;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 20px;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .problem-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #1E3A8A, #0D9488);
+            transform: scaleY(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .problem-card:hover {
+            border-color: #1E3A8A;
+            box-shadow: 0 12px 32px rgba(30, 58, 138, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .problem-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .problem-card h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 0.75rem;
+        }
+
+        .problem-card p {
+            color: #64748B;
+            line-height: 1.7;
+            font-size: clamp(0.9rem, 1.2vw, 1rem);
+        }
+
+        .dashboard {
+            display: none;
+            padding: clamp(6rem, 15vw, 8rem) clamp(1rem, 5vw, 4rem) clamp(3rem, 10vw, 4rem);
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            max-width: clamp(300px, 95vw, 1200px);
+            margin: 0 auto clamp(2rem, 4vw, 4rem);
+        }
+
+        .feature-card {
+            background: white;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 20px;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #1E3A8A, #0D9488);
+            transform: scaleY(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            border-color: #1E3A8A;
+            box-shadow: 0 12px 32px rgba(30, 58, 138, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .feature-card h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: #64748B;
+            line-height: 1.6;
+            font-size: clamp(0.9rem, 1.2vw, 1rem);
+        }
+
+        .content-section {
+            max-width: clamp(300px, 95vw, 1200px);
+            margin: 0 auto clamp(2rem, 4vw, 4rem);
+            padding: clamp(2rem, 4vw, 3rem);
+            background: white;
+            border-radius: 24px;
+            border: 1.5px solid #E2E8F0;
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            padding-bottom: clamp(1rem, 2vw, 1.5rem);
+            border-bottom: 2px solid #E2E8F0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .content-header h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 600;
+            color: #1E3A8A;
+        }
+
+        .back-btn {
+            padding: clamp(0.6rem, 1.2vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+            background: #F1F5F9;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+            font-weight: 600;
+            color: #1E293B;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .back-btn:hover {
+            background: #E2E8F0;
+            transform: translateY(-2px);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .info-card {
+            background: #F8FAFC;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 16px;
+            padding: clamp(1.25rem, 2.5vw, 1.5rem);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .info-card:hover {
+            border-color: #1E3A8A;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+        }
+
+        .info-card h4 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.1rem, 2vw, 1.25rem);
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-card p {
+            color: #64748B;
+            line-height: 1.7;
+            font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+        }
+
+        .geo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .geo-btn {
+            padding: clamp(0.875rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+            background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+        }
+
+        .geo-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(13, 148, 136, 0.35);
+        }
+
+        .location-status {
+            background: #F0F9FF;
+            padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: 12px;
+            border: 1.5px solid #DBEAFE;
+            display: none;
+        }
+
+        .location-status.visible {
+            display: block;
+        }
+
+        .location-status p {
+            color: #64748B;
+            margin: 0;
+            font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+        }
+
+        .location-status strong {
+            color: #1E3A8A;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .service-card {
+            background: #F8FAFC;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 18px;
+            padding: clamp(1.25rem, 2.5vw, 1.5rem);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .service-card:hover {
+            border-color: #1E3A8A;
+            box-shadow: 0 8px 24px rgba(30, 58, 138, 0.12);
+            transform: translateY(-3px);
+        }
+
+        .service-card .service-type {
+            display: inline-block;
+            padding: clamp(0.375rem, 0.8vw, 0.5rem) clamp(0.75rem, 1.5vw, 1rem);
+            background: #CCFBF1;
+            color: #0D9488;
+            border-radius: 24px;
+            font-size: clamp(0.7rem, 1vw, 0.8rem);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .service-card h5 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.1rem, 2vw, 1.25rem);
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-card p {
+            color: #64748B;
+            margin-bottom: 0.25rem;
+            line-height: 1.5;
+            font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+        }
+
+        .service-card .contact-info {
+            color: #64748B;
+            margin-bottom: 1rem;
+            font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+        }
+
+        .service-card .contact-info strong {
+            color: #1E3A8A;
+        }
+
+        .map-btn {
+            padding: clamp(0.6rem, 1.2vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+            background: #1E3A8A;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .map-btn:hover {
+            background: #3B82F6;
+            transform: translateY(-2px);
+        }
+
+        .reminder-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F8FAFC;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 18px;
+            padding: clamp(1.25rem, 2.5vw, 1.5rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .reminder-control h4 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .toggle {
+            width: clamp(50px, 10vw, 60px);
+            height: clamp(26px, 5vw, 32px);
+            background: #E2E8F0;
+            border-radius: 16px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toggle.active {
+            background: #0D9488;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: clamp(18px, 4vw, 24px);
+            height: clamp(18px, 4vw, 24px);
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toggle.active::after {
+            transform: translateX(clamp(18px, 4vw, 28px));
+        }
+
+        .toggle:hover {
+            transform: scale(1.05);
+        }
+
+        .reminder-list {
+            display: none;
+        }
+
+        .reminder-list.visible {
+            display: block;
+        }
+
+        .reminder-item {
+            background: #F0F9FF;
+            padding: clamp(0.875rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: 14px;
+            margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
+            border: 1.5px solid #DBEAFE;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reminder-item:hover {
+            transform: translateX(4px);
+        }
+
+        .reminder-item p {
+            color: #64748B;
+            margin: 0;
+            font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+        }
+
+        .support-box {
+            background: linear-gradient(135deg, #DBEAFE 0%, #CCFBF1 100%);
+            border: 2px solid #1E3A8A;
+            border-radius: 24px;
+            padding: clamp(2rem, 4vw, 2.5rem);
+            text-align: center;
+        }
+
+        .support-box h4 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 600;
+            color: #1E3A8A;
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .support-box p {
+            font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+            color: #1E293B;
+            line-height: 1.8;
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .support-box .highlight {
+            background: white;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            border-radius: 16px;
+            border-left: 5px solid #0D9488;
+        }
+
+        .support-box .highlight p {
+            font-size: clamp(0.85rem, 1.2vw, 1rem);
+            color: #64748B;
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        .footer {
+            background: #1E293B;
+            color: white;
+            padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 5vw, 4rem);
+            text-align: center;
+        }
+
+        .footer p {
+            margin-bottom: 0.5rem;
+            color: #94A3B8;
+            font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+        }
+
+        .footer strong {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="intro-overlay" id="introOverlay">
+        <div class="intro-content">
+            <div class="intro-logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            </div>
+            <h1>Cuidar<br><span>Conecta</span></h1>
+            <p>Plataforma segura e anônima para apoio à saúde mental. Seu acesso é 100% privado e sigiloso.</p>
+            <button class="intro-btn" id="introBtn">Acessar com Sigilo</button>
+        </div>
+    </div>
+
+    <div class="transition-overlay" id="transitionOverlay">
+        <div class="transition-heart" id="transitionHeart">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <header class="header" id="header">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+                <span class="logo-text">Cuidar<span>Conecta</span></span>
+            </a>
+            <nav class="nav">
+                <div class="nav-item">
+                    <span class="nav-link">O Problema</span>
+                    <div class="dropdown">
+                        <a href="#problema">Entenda a Dependência</a>
+                        <a href="#sinais">Sinais de Alerta</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-link">Como Funciona</span>
+                    <div class="dropdown">
+                        <a href="#como-funciona">Acesso Anônimo</a>
+                        <a href="#dashboard">Recursos</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-link">Recursos</span>
+                    <div class="dropdown">
+                        <a href="#info">Informações</a>
+                        <a href="#geo">Rede de Apoio</a>
+                        <a href="#reminders">Lembretes</a>
+                        <a href="#support">Acolhimento</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-link">Rede de Apoio</span>
+                    <div class="dropdown">
+                        <a href="#geo">Buscar Serviços</a>
+                        <a href="#support">Canal de Acolhimento</a>
+                    </div>
+                </div>
+            </nav>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </header>
+
+        <div class="mobile-menu" id="mobileMenu">
+            <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+            <div class="mobile-nav-item">
+                <a href="#problema" class="mobile-nav-link">O Problema</a>
+                <div class="mobile-dropdown">
+                    <a href="#problema">Entenda a Dependência</a>
+                    <a href="#sinais">Sinais de Alerta</a>
+                </div>
+            </div>
+            <div class="mobile-nav-item">
+                <a href="#como-funciona" class="mobile-nav-link">Como Funciona</a>
+                <div class="mobile-dropdown">
+                    <a href="#como-funciona">Acesso Anônimo</a>
+                    <a href="#dashboard">Recursos</a>
+                </div>
+            </div>
+            <div class="mobile-nav-item">
+                <a href="#dashboard" class="mobile-nav-link">Recursos</a>
+                <div class="mobile-dropdown">
+                    <a href="#info">Informações</a>
+                    <a href="#geo">Rede de Apoio</a>
+                    <a href="#reminders">Lembretes</a>
+                    <a href="#support">Acolhimento</a>
+                </div>
+            </div>
+            <div class="mobile-nav-item">
+                <a href="#geo" class="mobile-nav-link">Rede de Apoio</a>
+                <div class="mobile-dropdown">
+                    <a href="#geo">Buscar Serviços</a>
+                    <a href="#support">Canal de Acolhimento</a>
+                </div>
+            </div>
+        </div>
+
+        <section class="hero" id="problema">
+            <div class="hero-content">
+                <h1>Apoio e Conexão para<br><span>Dependência Química</span></h1>
+                <p>Plataforma segura e anônima para encontrar apoio, informações confiáveis e rede de atendimento especializada em todo o Brasil.</p>
+                <div class="hero-actions">
+                    <button class="btn-primary" id="openAccessModal">Acessar com Sigilo</button>
+                    <a href="#como-funciona" class="btn-secondary">Saiba Mais</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="sinais">
+            <h2 class="section-title">Sinais de Alerta</h2>
+            <p class="section-subtitle">Reconhecer os sinais é o primeiro passo para buscar ajuda e iniciar o processo de recuperação.</p>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <h3>Perda de Controle</h3>
+                    <p>Dificuldade em limitar o consumo, mesmo quando se deseja parar ou reduzir.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Tolerância Aumentada</h3>
+                    <p>Precisa de quantidades maiores da substância para sentir o mesmo efeito.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Sintomas de Abstinência</h3>
+                    <p>Mal-estar físico e emocional quando para de usar a substância.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Negligência de Responsabilidades</h3>
+                    <p>Abandono de atividades importantes no trabalho, estudos ou vida pessoal.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="como-funciona">
+            <h2 class="section-title">Como Funciona</h2>
+            <p class="section-subtitle">Acesse a plataforma de forma totalmente anônima, sem cadastro ou compartilhamento de dados pessoais.</p>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <h3>1. Acesso Anônimo</h3>
+                    <p>Entre na plataforma sem fornecer qualquer dado pessoal. Sua privacidade é garantida desde o primeiro clique.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>2. Informações Confiáveis</h3>
+                    <p>Encontre conteúdo validado sobre dependência química, tratamentos e sinais de alerta.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>3. Rede de Apoio</h3>
+                    <p>Localize CAPS, UBS e hospitais próximos com endereços, telefones e rotas para o Google Maps.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>4. Acolhimento</h3>
+                    <p>Receba mensagens de apoio e orientação humanizada em um ambiente seguro e sem julgamentos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard" id="dashboard">
+            <h2 class="section-title">Recursos Disponíveis</h2>
+            <p class="section-subtitle">Ferramentas e informações para apoiar sua jornada de recuperação de forma segura e humanizada.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card" data-section="info" id="info">
+                    <h3>Informações Confiáveis</h3>
+                    <p>Conteúdo educativo validado sobre dependência química, sinais de alerta e tratamentos disponíveis.</p>
+                </div>
+                <div class="feature-card" data-section="geo" id="geo">
+                    <h3>Rede de Apoio</h3>
+                    <p>Encontre CAPS, UBS e hospitais com endereços, telefones e rotas para o Google Maps.</p>
+                </div>
+                <div class="feature-card" data-section="reminders" id="reminders">
+                    <h3>Lembretes Opcionais</h3>
+                    <p>Configure avisos discretos para consultas, medicamentos e compromissos de tratamento.</p>
+                </div>
+                <div class="feature-card" data-section="support" id="support">
+                    <h3>Canal de Acolhimento</h3>
+                    <p>Mensagens de apoio e orientação humanizada, lembrando que pedir ajuda é um passo importante.</p>
+                </div>
+            </div>
+
+            <div class="content-section" id="infoSection">
+                <div class="content-header">
+                    <h3>Informações Confiáveis</h3>
+                    <button class="back-btn" data-back="dashboard">Voltar</button>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>Dependência Química</h4>
+                        <p>Condição crônica que afeta o cérebro, caracterizada pelo uso compulsivo de substâncias apesar das consequências negativas.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Tratamento é Possível</h4>
+                        <p>Com acompanhamento profissional adequado, é possível alcançar a recuperação e melhorar a qualidade de vida significativamente.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Sinais de Alerta</h4>
+                        <p>Perda de controle, tolerância aumentada, sintomas de abstinência e negligência de responsabilidades são sinais comuns.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Onde Buscar Ajuda</h4>
+                        <p>CAPS, UBS e hospitais públicos oferecem tratamento gratuito e especializado para dependência química.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="geoSection">
+                <div class="content-header">
+                    <h3>Rede de Apoio</h3>
+                    <button class="back-btn" data-back="dashboard">Voltar</button>
+                </div>
+                <div class="geo-header">
+                    <button class="geo-btn" id="detectLocation">Buscar perto de mim</button>
+                    <div class="location-status" id="locationStatus">
+                        <p>Localização detectada: <strong>Brasil</strong></p>
+                    </div>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <span class="service-type">CAPS AD</span>
+                        <h5>CAPS AD Dr. Waldomiro Rodrigues Costa</h5>
+                        <p>Rua Pedro Tanajura, 456 - Centro, Jequié - BA</p>
+                        <p class="contact-info"><strong>Telefone:</strong> (73) 3525-1234</p>
+                        <button class="map-btn" data-address="CAPS AD Dr. Waldomiro Rodrigues Costa, Rua Pedro Tanajura, 456, Centro, Jequié, BA">Ver no Google Maps</button>
+                    </div>
+                    <div class="service-card">
+                        <span class="service-type">CAPS i</span>
+                        <h5>CAPS Guito Guigo</h5>
+                        <p>Av. Guedes de Brito, 789 - Centro, Jequié - BA</p>
+                        <p class="contact-info"><strong>Telefone:</strong> (73) 3527-9012</p>
+                        <button class="map-btn" data-address="CAPS Guito Guigo, Av. Guedes de Brito, 789, Centro, Jequié, BA">Ver no Google Maps</button>
+                    </div>
+                    <div class="service-card">
+                        <span class="service-type">UBS</span>
+                        <h5>UBS Jequiezinho</h5>
+                        <p>Rua das Flores, 123 - Jequiezinho, Jequié - BA</p>
+                        <p class="contact-info"><strong>Telefone:</strong> (73) 3526-5678</p>
+                        <button class="map-btn" data-address="UBS Jequiezinho, Rua das Flores, 123, Jequiezinho, Jequié, BA">Ver no Google Maps</button>
+                    </div>
+                    <div class="service-card">
+                        <span class="service-type">UBS</span>
+                        <h5>UBS Santa Helena</h5>
+                        <p>Travessa São Pedro, 321 - Santa Helena, Jequié - BA</p>
+                        <p class="contact-info"><strong>Telefone:</strong> (73) 3528-3456</p>
+                        <button class="map-btn" data-address="UBS Santa Helena, Travessa São Pedro, 321, Santa Helena, Jequié, BA">Ver no Google Maps</button>
+                    </div>
+                    <div class="service-card">
+                        <span class="service-type">Hospital</span>
+                        <h5>Hospital Geral de Jequié</h5>
+                        <p>Av. Omar Diniz, 100 - Centro, Jequié - BA</p>
+                        <p class="contact-info"><strong>Telefone:</strong> (73) 3525-0000</p>
+                        <button class="map-btn" data-address="Hospital Geral de Jequié, Av. Omar Diniz, 100, Centro, Jequié, BA">Ver no Google Maps</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="remindersSection">
+                <div class="content-header">
+                    <h3>Lembretes Opcionais</h3>
+                    <button class="back-btn" data-back="dashboard">Voltar</button>
+                </div>
+                <div class="reminder-control">
+                    <h4>Ativar Lembretes</h4>
+                    <div class="toggle" id="reminderToggle"></div>
+                </div>
+                <div class="reminder-list" id="reminderList">
+                    <div class="reminder-item">
+                        <p><strong>Consulta CAPS:</strong> Terça-feira, 14h</p>
+                    </div>
+                    <div class="reminder-item">
+                        <p><strong>Medicamento:</strong> 8h e 20h</p>
+                    </div>
+                    <div class="reminder-item">
+                        <p><strong>Terapia em grupo:</strong> Quinta-feira, 16h</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="supportSection">
+                <div class="content-header">
+                    <h3>Canal de Acolhimento</h3>
+                    <button class="back-btn" data-back="dashboard">Voltar</button>
+                </div>
+                <div class="support-box">
+                    <h4>Você não está sozinho</h4>
+                    <p>O Cuidar Conecta oferece apoio, orientação e conexão com serviços de saúde pública. Estamos aqui para ajudar.</p>
+                    <div class="highlight">
+                        <p><strong>Pedir ajuda é um passo importante.</strong> O aplicativo apoia e orienta, mas não substitui profissionais de saúde.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><strong>Alunos:</strong> Jonas e Gilson</p>
+            <p><strong>Escola:</strong> Nova Cultural</p>
+            <p><strong>Professor:</strong> Ives</p>
+            <p style="margin-top: 1rem;">Cuidar Conecta - Projeto de Apoio à Saúde Mental</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const introOverlay = document.getElementById('introOverlay');
+            const introBtn = document.getElementById('introBtn');
+            const transitionOverlay = document.getElementById('transitionOverlay');
+            const transitionHeart = document.getElementById('transitionHeart');
+            const mainContent = document.getElementById('mainContent');
+            const header = document.getElementById('header');
+            const hero = document.getElementById('problema');
+            const sections = document.querySelectorAll('.section');
+            const dashboard = document.getElementById('dashboard');
+            const featureCards = document.querySelectorAll('.feature-card');
+            const backButtons = document.querySelectorAll('.back-btn');
+            const contentSections = document.querySelectorAll('.content-section');
+            const detectLocation = document.getElementById('detectLocation');
+            const locationStatus = document.getElementById('locationStatus');
+            const reminderToggle = document.getElementById('reminderToggle');
+            const reminderList = document.getElementById('reminderList');
+            const mapButtons = document.querySelectorAll('.map-btn');
+            const navLinks = document.querySelectorAll('.nav-link, .dropdown a');
+            const hamburger = document.getElementById('hamburger');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link, .mobile-dropdown a');
+
+            if (introBtn) {
+                introBtn.addEventListener('click', function() {
+                    if (introOverlay) {
+                        introOverlay.classList.add('hidden');
+                    }
+                    if (transitionOverlay) {
+                        transitionOverlay.classList.add('active');
+                        if (transitionHeart) {
+                            setTimeout(() => {
+                                transitionHeart.classList.add('animate');
+                            }, 100);
+                        }
+                    }
+                    
+                    setTimeout(() => {
+                        if (transitionOverlay) {
+                            transitionOverlay.classList.remove('active');
+                            if (transitionHeart) {
+                                transitionHeart.classList.remove('animate');
+                            }
+                        }
+                        if (mainContent) {
+                            mainContent.classList.add('revealed');
+                        }
+                        animateElements();
+                    }, 1600);
+                });
+            }
+
+            function animateElements() {
+                setTimeout(() => {
+                    if (header) header.classList.add('animate');
+                }, 200);
+                
+                setTimeout(() => {
+                    if (hero) hero.classList.add('animate');
+                }, 400);
+                
+                sections.forEach((section, index) => {
+                    setTimeout(() => {
+                        section.classList.add('animate');
+                    }, 600 + (index * 200));
+                });
+            }
+
+            if (featureCards.length > 0) {
+                featureCards.forEach(card => {
+                    card.addEventListener('click', function() {
+                        const section = this.getAttribute('data-section');
+                        if (section) {
+                            contentSections.forEach(sec => {
+                                sec.classList.remove('active');
+                            });
+                            const targetSection = document.getElementById(section + 'Section');
+                            if (targetSection) {
+                                targetSection.classList.add('active');
+                                setTimeout(() => {
+                                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }, 100);
+                            }
+                        }
+                    });
+                });
+            }
+
+            if (backButtons.length > 0) {
+                backButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const backTarget = this.getAttribute('data-back');
+                        if (backTarget === 'dashboard') {
+                            contentSections.forEach(sec => {
+                                sec.classList.remove('active');
+                            });
+                            if (dashboard) {
+                                setTimeout(() => {
+                                    dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }, 100);
+                            }
+                        }
+                    });
+                });
+            }
+
+            if (detectLocation) {
+                detectLocation.addEventListener('click', function() {
+                    if (locationStatus) {
+                        locationStatus.classList.add('visible');
+                    }
+                });
+            }
+
+            if (reminderToggle) {
+                reminderToggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    if (reminderList) {
+                        if (this.classList.contains('active')) {
+                            reminderList.classList.add('visible');
+                        } else {
+                            reminderList.classList.remove('visible');
+                        }
+                    }
+                });
+            }
+
+            if (mapButtons.length > 0) {
+                mapButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const address = this.getAttribute('data-address');
+                        if (address) {
+                            const encodedAddress = encodeURIComponent(address);
+                            window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank', 'noopener,noreferrer');
+                        }
+                    });
+                });
+            }
+
+            if (navLinks.length > 0) {
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        const href = this.getAttribute('href');
+                        if (href && href.startsWith('#')) {
+                            e.preventDefault();
+                            const targetId = href.substring(1);
+                            const targetElement = document.getElementById(targetId);
+                            if (targetElement) {
+                                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }
+                    });
+                });
+            }
+
+            if (hamburger) {
+                hamburger.addEventListener('click', function() {
+                    if (mobileMenu) {
+                        mobileMenu.classList.add('active');
+                    }
+                });
+            }
+
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', function() {
+                    if (mobileMenu) {
+                        mobileMenu.classList.remove('active');
+                    }
+                });
+            }
+
+            if (mobileMenu) {
+                mobileMenu.addEventListener('click', function(e) {
+                    if (e.target === mobileMenu) {
+                        mobileMenu.classList.remove('active');
+                    }
+                });
+            }
+
+            if (mobileNavLinks.length > 0) {
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        if (mobileMenu) {
+                            mobileMenu.classList.remove('active');
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
