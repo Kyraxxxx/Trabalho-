@@ -306,27 +306,19 @@
             background: white;
         }
 
-        .search-btn, .geo-btn {
+        .search-btn {
             padding: 0.875rem 2rem;
+            background: #0D9488;
+            color: white;
+            border: none;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: opacity 0.3s ease;
-            border: none;
-            border-radius: 12px;
         }
 
-        .search-btn {
-            background: #0D9488;
-            color: white;
-        }
-
-        .geo-btn {
-            background: #1E3A8A;
-            color: white;
-        }
-
-        .search-btn:hover, .geo-btn:hover {
+        .search-btn:hover {
             opacity: 0.9;
         }
 
@@ -633,7 +625,6 @@
                 <div class="search-section">
                     <div class="search-container">
                         <div class="search-filters">
-                            <button class="geo-btn" id="geoBtn">Usar minha localização</button>
                             <input type="text" class="search-input" id="cityInput" placeholder="Digite sua cidade ou estado...">
                             <select class="filter-select" id="typeFilter">
                                 <option value="">Todos os tipos</option>
@@ -643,50 +634,7 @@
                             </select>
                             <button class="search-btn" id="searchBtn">Buscar</button>
                         </div>
-                        <div class="services-grid" id="servicesGrid">
-                            <div class="service-card" data-city="jequié" data-type="CAPS" data-name="CAPS AD Jequié" data-address="Rua Pedro Tanajura, 456">
-                                <span class="tag">CAPS AD</span>
-                                <h5>CAPS AD Jequié</h5>
-                                <p>Rua Pedro Tanajura, 456 - Centro</p>
-                                <p>Jequié - BA | (73) 3525-1234</p>
-                                <button class="route-btn" onclick="openRoute('CAPS AD Jequié', 'Rua Pedro Tanajura, 456, Jequié, BA')">Traçar Rota</button>
-                            </div>
-                            <div class="service-card" data-city="jequié" data-type="CAPS" data-name="CAPS i Jequié" data-address="Av. Guedes de Brito, 789">
-                                <span class="tag">CAPS i</span>
-                                <h5>CAPS i Jequié</h5>
-                                <p>Av. Guedes de Brito, 789 - Centro</p>
-                                <p>Jequié - BA | (73) 3527-9012</p>
-                                <button class="route-btn" onclick="openRoute('CAPS i Jequié', 'Av. Guedes de Brito, 789, Jequié, BA')">Traçar Rota</button>
-                            </div>
-                            <div class="service-card" data-city="jequié" data-type="UBS" data-name="UBS Jequiezinho" data-address="Rua das Flores, 123">
-                                <span class="tag">UBS</span>
-                                <h5>UBS Jequiezinho</h5>
-                                <p>Rua das Flores, 123 - Jequiezinho</p>
-                                <p>Jequié - BA | (73) 3526-5678</p>
-                                <button class="route-btn" onclick="openRoute('UBS Jequiezinho', 'Rua das Flores, 123, Jequié, BA')">Traçar Rota</button>
-                            </div>
-                            <div class="service-card" data-city="salvador" data-type="CAPS" data-name="CAPS Salvador" data-address="Rua da Saúde, 100">
-                                <span class="tag">CAPS</span>
-                                <h5>CAPS Salvador</h5>
-                                <p>Rua da Saúde, 100 - Centro</p>
-                                <p>Salvador - BA | (71) 3234-5678</p>
-                                <button class="route-btn" onclick="openRoute('CAPS Salvador', 'Rua da Saúde, 100, Salvador, BA')">Traçar Rota</button>
-                            </div>
-                            <div class="service-card" data-city="salvador" data-type="Hospital" data-name="Hospital Geral de Salvador" data-address="Av. Sete de Setembro, 500">
-                                <span class="tag">Hospital</span>
-                                <h5>Hospital Geral de Salvador</h5>
-                                <p>Av. Sete de Setembro, 500</p>
-                                <p>Salvador - BA | (71) 3321-0000</p>
-                                <button class="route-btn" onclick="openRoute('Hospital Geral de Salvador', 'Av. Sete de Setembro, 500, Salvador, BA')">Traçar Rota</button>
-                            </div>
-                            <div class="service-card" data-city="são paulo" data-type="CAPS" data-name="CAPS São Paulo" data-address="Rua Augusta, 200">
-                                <span class="tag">CAPS</span>
-                                <h5>CAPS São Paulo</h5>
-                                <p>Rua Augusta, 200 - Consolação</p>
-                                <p>São Paulo - SP | (11) 3456-7890</p>
-                                <button class="route-btn" onclick="openRoute('CAPS São Paulo', 'Rua Augusta, 200, São Paulo, SP')">Traçar Rota</button>
-                            </div>
-                        </div>
+                        <div class="services-grid" id="servicesGrid"></div>
                     </div>
                 </div>
             </div>
@@ -741,7 +689,6 @@
             var accessBtn = document.getElementById('accessBtn');
             var introScreen = document.getElementById('introScreen');
             var mainApp = document.getElementById('mainApp');
-            var geoBtn = document.getElementById('geoBtn');
             var locationBanner = document.getElementById('locationBanner');
             var locationText = document.getElementById('locationText');
             var searchBtn = document.getElementById('searchBtn');
@@ -753,7 +700,71 @@
             var reminderTime = document.getElementById('reminderTime');
             var remindersList = document.getElementById('remindersList');
 
-            var userCity = '';
+            var currentCity = '';
+            var currentCityDisplay = '';
+
+            var unidadesByCidade = {
+                'jequié': [
+                    { name: 'CAPS AD Jequié', type: 'CAPS', address: 'Rua Pedro Tanajura, 456', phone: '(73) 3525-1234' },
+                    { name: 'CAPS i Jequié', type: 'CAPS', address: 'Av. Guedes de Brito, 789', phone: '(73) 3527-9012' },
+                    { name: 'UBS Jequiezinho', type: 'UBS', address: 'Rua das Flores, 123', phone: '(73) 3526-5678' },
+                    { name: 'UBS Centro', type: 'UBS', address: 'Rua Principal, 100', phone: '(73) 3525-0000' },
+                    { name: 'Hospital Geral de Jequié', type: 'Hospital', address: 'Av. Omar Diniz, 500', phone: '(73) 3523-1111' }
+                ],
+                'salvador': [
+                    { name: 'CAPS Salvador', type: 'CAPS', address: 'Rua da Saúde, 100', phone: '(71) 3234-5678' },
+                    { name: 'CAPS AD Salvador', type: 'CAPS', address: 'Av. Anita Garibaldi, 200', phone: '(71) 3235-9999' },
+                    { name: 'UBS Centro', type: 'UBS', address: 'Praça da Sé, 50', phone: '(71) 3322-0000' },
+                    { name: 'Hospital Geral de Salvador', type: 'Hospital', address: 'Av. Sete de Setembro, 500', phone: '(71) 3321-0000' }
+                ],
+                'são paulo': [
+                    { name: 'CAPS São Paulo', type: 'CAPS', address: 'Rua Augusta, 200', phone: '(11) 3456-7890' },
+                    { name: 'CAPS AD Pinheiros', type: 'CAPS', address: 'Rua Cardeal Arcoverde, 100', phone: '(11) 3455-1111' },
+                    { name: 'UBS Centro', type: 'UBS', address: 'Praça da República, 50', phone: '(11) 3337-0000' },
+                    { name: 'Hospital das Clínicas', type: 'Hospital', address: 'Av. Dr. Enéas Carvalho de Aguiar, 255', phone: '(11) 2661-0000' }
+                ]
+            };
+
+            function generateGenericCards(city) {
+                return [
+                    { name: 'CAPS AD ' + city, type: 'CAPS', address: 'Rua Principal, 100 - Centro', phone: '(00) 0000-0000' },
+                    { name: 'UBS Centro ' + city, type: 'UBS', address: 'Av. Principal, 200', phone: '(00) 0000-0000' },
+                    { name: 'Unidade de Saúde Familiar ' + city, type: 'UBS', address: 'Rua da Saúde, 50', phone: '(00) 0000-0000' }
+                ];
+            }
+
+            function renderCards(cidade, tipoFiltro) {
+                if (!servicesGrid) return;
+                
+                servicesGrid.innerHTML = '';
+                
+                var cidadeKey = cidade.toLowerCase();
+                var unidades = unidadesByCidade[cidadeKey];
+                
+                if (!unidades || unidades.length === 0) {
+                    unidades = generateGenericCards(cidade);
+                }
+                
+                var filteredUnidades = unidades;
+                
+                if (tipoFiltro) {
+                    filteredUnidades = unidades.filter(function(unidade) {
+                        return unidade.type === tipoFiltro;
+                    });
+                }
+                
+                if (filteredUnidades.length === 0) {
+                    servicesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748B; padding: 2rem;">Nenhuma unidade encontrada para este filtro.</p>';
+                    return;
+                }
+                
+                filteredUnidades.forEach(function(unidade) {
+                    var card = document.createElement('div');
+                    card.className = 'service-card';
+                    card.innerHTML = '<span class="tag">' + unidade.type + '</span><h5>' + unidade.name + '</h5><p>' + unidade.address + '</p><p>' + cidade + ' | ' + unidade.phone + '</p><button class="route-btn" onclick="openRoute(\'' + unidade.name + '\', \'' + unidade.address + ', ' + cidade + '\')">Traçar Rota</button>';
+                    servicesGrid.appendChild(card);
+                });
+            }
 
             if (accessBtn) {
                 accessBtn.addEventListener('click', function() {
@@ -767,120 +778,49 @@
                 });
             }
 
-            function initGeolocation() {
+            async function initGeolocation() {
                 if (!locationBanner || !locationText) return;
                 
                 locationBanner.classList.add('visible');
                 locationText.innerHTML = '<span class="location-loading">Detectando sua localização...</span>';
 
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        function(position) {
-                            var lat = position.coords.latitude;
-                            var lon = position.coords.longitude;
-                            getLocationByCoords(lat, lon);
-                        },
-                        function(error) {
-                            getLocationByIP();
+                try {
+                    var response = await fetch('https://ipapi.co/json/');
+                    var data = await response.json();
+                    
+                    if (data && data.city) {
+                        currentCity = data.city;
+                        currentCityDisplay = data.city + (data.region ? ', ' + data.region : '');
+                        locationText.innerHTML = 'Sua localização detectada: <strong>' + currentCityDisplay + '</strong>';
+                        renderCards(currentCity, '');
+                        if (cityInput) {
+                            cityInput.value = currentCity;
                         }
-                    );
-                } else {
-                    getLocationByIP();
+                    } else {
+                        throw new Error('Cidade não encontrada');
+                    }
+                } catch (error) {
+                    locationText.innerHTML = 'Não foi possível detectar sua localização automaticamente. Por favor, digite sua cidade.';
+                    renderCards('Sua Cidade', '');
                 }
-            }
-
-            function getLocationByCoords(lat, lon) {
-                if (!locationText) return;
-                
-                fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon)
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(data) {
-                        if (data && data.address && data.address.city) {
-                            userCity = data.address.city.toLowerCase();
-                            locationText.innerHTML = 'Localização atual: <strong>' + data.address.city + '</strong>';
-                            filterServicesByCity(userCity);
-                        } else {
-                            getLocationByIP();
-                        }
-                    })
-                    .catch(function() {
-                        getLocationByIP();
-                    });
-            }
-
-            function getLocationByIP() {
-                if (!locationText) return;
-                
-                fetch('https://ipapi.co/json/')
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(data) {
-                        if (data && data.city) {
-                            userCity = data.city.toLowerCase();
-                            locationText.innerHTML = 'Localização atual: <strong>' + data.city + '</strong>';
-                            filterServicesByCity(userCity);
-                        } else {
-                            locationText.innerHTML = 'Não foi possível detectar sua localização automaticamente.';
-                        }
-                    })
-                    .catch(function() {
-                        locationText.innerHTML = 'Não foi possível detectar sua localização automaticamente.';
-                    });
-            }
-
-            function filterServicesByCity(city) {
-                if (!servicesGrid) return;
-                
-                var services = servicesGrid.querySelectorAll('.service-card');
-                
-                if (services && services.length > 0) {
-                    services.forEach(function(service) {
-                        var serviceCity = service.getAttribute('data-city');
-                        
-                        if (!serviceCity) return;
-                        
-                        if (serviceCity.toLowerCase().includes(city)) {
-                            service.style.display = 'block';
-                        } else {
-                            service.style.display = 'none';
-                        }
-                    });
-                }
-            }
-
-            if (geoBtn) {
-                geoBtn.addEventListener('click', function() {
-                    initGeolocation();
-                });
             }
 
             function searchServices() {
-                if (!cityInput || !typeFilter || !servicesGrid) return;
+                if (!cityInput || !typeFilter) return;
                 
-                var cityValue = cityInput.value.toLowerCase();
+                var cityValue = cityInput.value.trim();
                 var typeValue = typeFilter.value;
-                var services = servicesGrid.querySelectorAll('.service-card');
                 
-                if (services && services.length > 0) {
-                    services.forEach(function(service) {
-                        var city = service.getAttribute('data-city');
-                        var type = service.getAttribute('data-type');
-                        
-                        if (!city || !type) return;
-                        
-                        var cityMatch = city.toLowerCase().includes(cityValue) || cityValue === '';
-                        var typeMatch = type === typeValue || typeValue === '';
-                        
-                        if (cityMatch && typeMatch) {
-                            service.style.display = 'block';
-                        } else {
-                            service.style.display = 'none';
-                        }
-                    });
+                if (!cityValue) {
+                    if (currentCity) {
+                        renderCards(currentCity, typeValue);
+                    }
+                    return;
                 }
+                
+                currentCity = cityValue;
+                currentCityDisplay = cityValue;
+                renderCards(cityValue, typeValue);
             }
 
             if (searchBtn) {
@@ -892,6 +832,12 @@
                     if (e.key === 'Enter') {
                         searchServices();
                     }
+                });
+            }
+
+            if (typeFilter) {
+                typeFilter.addEventListener('change', function() {
+                    searchServices();
                 });
             }
 
